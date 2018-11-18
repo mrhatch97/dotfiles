@@ -1,0 +1,15 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+name = Matthew Hatch
+email = mrhatch97@gmail.com
+	signingkey = 9342697757A84514BBE1C09C504E7BC42B1A7FCE
+[commit]
+	gpgsign = true
+[alias]
+	update = !git pull --rebase --prune  && git submodule update --init --recursive
+	nb = checkout -b
+	db = branch -d
+	cm = !git add -A && git commit -m
+    nuke = !git add -A && git commit -qm 'NUKE SAVE' && git reset HEAD~1 --hard
+    aa = add -A
