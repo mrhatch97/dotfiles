@@ -1,26 +1,9 @@
 #
-# .bashrc
+# ~/.bashrc
 #
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-
-[[ $DISPLAY ]] && shopt -s checkwinsize
-
-case ${TERM} in
-  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-
-    ;;
-  screen*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    ;;
-  linux*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    ;;
-esac
-
-[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 # Color definitions:
 red='\e[0;31m'
@@ -30,10 +13,6 @@ BLUE='\e[1;34m'
 cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m'              # No Color
-
-#-------------------------------------------------------------------------------
-# Functions etc.
-#-------------------------------------------------------------------------------
 
 #Truncate working dir to last 20 characters
 
@@ -47,29 +26,11 @@ NEW_PROMPT_COMMAND='TRIMMED_PWD=${PWD: -($COLUMNS / 4)}; TRIMMED_PWD=${TRIMMED_P
 # Personal Aliases
 #-------------------------------------------------------------------------------
 
-# ls aliases
-alias ls='ls -h --color=auto'
-alias la='ls -A'
-alias ll='la -lv --group-directories-first'
-
-alias h='history'
-
-# Always make parent directories when needed, prompt before clobbering files
-alias mkdir='mkdir -p'
-alias cp='cp -i'
-alias mv='mv -i'
-
-# No vi
 alias vi='vim'
 
-function mkdcd() 
+mkdcd() 
 {
     mkdir "$1" && cd "$1"
-}
-
-function to() {
-    cwd=`pwd`
-    cd ${cwd%$1*}$1 
 }
 
 # Filecount
@@ -89,8 +50,7 @@ alias path='echo -e ${PATH//:/\\n}'
 alias du='du -kh'
 alias df='df -kTh'
 
-# Make grep use colors
-alias grep='grep --color=auto'
+alias duh='du -d 1'
 
 #-------------------------------------------------------------------------------
 # Environment Variables
@@ -125,3 +85,28 @@ PS2='>'
 #-------------------------------------------------------------------------------
 
 echo -e "Bash version ${RED}${BASH_VERSION%.*}${NC} on tty ${RED}$DISPLAY${NC} at $(date +%Y-%m-%d:%H:%M:%S)"
+
+echo -e "Imperial thought for the day:\n$(fortune warhammer)"
+
+export GPG_TTY=$(tty)
+
+# Start the gpg-agent if not already running
+if ! pgrep -x -u "${USER}" gpg-agent >/dev/null 2>&1; then
+  gpg-connect-agent /bye >/dev/null 2>&1
+fi
+
+# Refresh gpg-agent tty in case user switches into an X session
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
+alias install='sudo pacman -S'
+alias uninstall='sudo pacman -Rs'
+
+function to() {
+    cwd=`pwd`
+    cd ${cwd%$1*}$1 
+}
+
+if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+    GIT_PROMPT_ONLY_IN_REPO=1
+    source $HOME/.bash-git-prompt/gitprompt.sh
+fi

@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
 # Please adapt and uncomment the following lines:
-name = Matthew Hatch
+name = Matt Hatch
 email = mrhatch97@gmail.com
 	signingkey = 9342697757A84514BBE1C09C504E7BC42B1A7FCE
 [commit]
@@ -13,3 +13,5 @@ email = mrhatch97@gmail.com
 	cm = !git add -A && git commit -m
     nuke = !git add -A && git commit -qm 'NUKE SAVE' && git reset HEAD~1 --hard
     aa = add -A
+[core]
+	editor = vim
