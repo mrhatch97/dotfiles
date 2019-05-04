@@ -1,6 +1,6 @@
 " ~/.vimrc
 " Matthew Hatch
-" Last edited 2019-04-06
+" Last edited 2019-05-03
 
 set nocompatible		" get rid of strict vi compatibility!
 filetype off
@@ -109,10 +109,6 @@ noremap <F3> :Autoformat<CR>
 map <C-J> :next <CR>
 map <C-K> :prev <CR>
 
-" Spelling toggle via F10 and F11
-map <F10> <Esc>setlocal spell spelllang=en_us<CR>
-map <F11> <Esc>setlocal nospell<CR>
-
 " Disable Arrow keys in Escape mode
 map <up> <nop>
 map <down> <nop>
@@ -127,30 +123,3 @@ imap <right> <nop>
 
 " Easy exit from insert mode
 inoremap jj <ESC>
-
-" Avoid duplication of autocmds
-if !exists("autocmds_loaded")
-    let autocmds_loaded=1
-
-    augroup vimrc_autocmds
-      " Overlength line highlighting and wrapping for src files
-      au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp} highlight overLength ctermbg=red guifg=white guibg=#592929
-      au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp} match overLength /\%>80v.\+/
-      au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp} set textwidth=80
-
-      " Expand tabs in C files to spaces
-      au BufRead,BufNewFile *.{c,h,java,cpp,hpp} set expandtab
-      au BufRead,BufNewFile *.{c,h,java,cpp,hpp} set shiftwidth=2
-      au BufRead,BufNewFile *.{c,h,java,cpp,hpp} set tabstop=2
-
-      " Do not expand tabs in assembly files.  
-      au BufRead,BufNewFile *.s set noexpandtab
-      au BufRead,BufNewFile *.s set shiftwidth=8
-
-      " Do not expand tabs in Makefiles
-      au BufRead,BufNewFile Makefile set noexpandtab
-      au BufRead,BufNewFile Makefile set shiftwidth=6
-      au BufRead,BufNewFile Makefile set tabstop=6
-
-    augroup END
-endif
