@@ -2,7 +2,7 @@
 " Matthew Hatch
 " Last edited 2019-05-03
 
-set nocompatible		" get rid of strict vi compatibility!
+set nocompatible        " get rid of strict vi compatibility!
 filetype off
 
 " **************************************
@@ -96,8 +96,8 @@ let g:airline_symbols.linenr = ''
 
 " Linter config
 let g:ale_linters = {
-\   'cpp': ['clangtidy']
-\}
+            \   'cpp': ['clangtidy']
+            \}
 let g:airline#extensions#ale#enabled = 1
 
 " **************************************
@@ -123,3 +123,16 @@ imap <right> <nop>
 
 " Easy exit from insert mode
 inoremap jj <ESC>
+
+" Avoid duplication of autocmds
+if !exists("autocmds_loaded")
+    let autocmds_loaded=1
+
+    augroup vimrc_autocmds
+        " Overlength line highlighting and wrapping for src files
+        au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp,cs,js,hs} highlight overLength ctermbg=red guifg=white guibg=#592929
+        au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp,cs,js,hs} match overLength /\%>80v.\+/
+        au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp,cs,js,hs} set textwidth=80
+
+    augroup END
+endif
