@@ -1,6 +1,6 @@
 " ~/.vimrc
 " Matthew Hatch
-" Last edited 2019-05-03
+" Last edited 2019-05-06
 
 set nocompatible        " get rid of strict vi compatibility!
 filetype off
@@ -33,10 +33,10 @@ filetype plugin indent on    " required
 " VARIABLES
 " **************************************
 set nu                                          " line numbering on
-set autoindent                                  " autoindent on
 set noerrorbells                                " bye bye bells :)
 set modeline                                    " show what I'm doing
 set showmode                                    " show the mode on the dedicated line (see above)
+set path+=**                                    " Recursive search for file operations
 set wildmenu                                    " Better command line completion
 set showcmd                                     " Show partial commands in last line of screen
 set ignorecase                                  " search without regards to case
@@ -44,25 +44,32 @@ set smartcase                                   " except when using capital lett
 set backspace=indent,eol,start                  " backspace over everything
 set fileformats=unix,dos,mac                    " open files from mac/dos
 set ruler                                       " which line am I on?
-set showmatch                                   " ensure Dyck language
+set showmatch                                   " highlight matching parentheses
 set incsearch                                   " incremental searching
-set bs=2                                        " fix backspacing in insert mode
 set laststatus=2                                " Always display status line
 set confirm                                     " Confirm instead of fail
 
 " General indentation options
+" Spaces to indent, 4-wide indent
 
-set expandtab
-set shiftwidth=4
-set tabstop=4
-set smarttab
-set smartindent
+set autoindent                                  " Try to match indentation, allow smartindent
+set expandtab                                   " Tab outputs spaces
+set shiftwidth=4                                " Spaces per indentation step for autoindent
+set tabstop=4                                   " Number of spaces \t occupies
+set smarttab                                    " Insert tabs according to shiftwidth or (soft)tabstop based on context
+set smartindent                                 " OK default autoindentation option for C-like languages
 
 " Syntax highlighting theme
 syntax enable
 set background=dark
 colorscheme solarized
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+" Built-in file browser
+let g:netrw_banner=0                            " Disable banner
+let g:netrw_browse_split=4                      " Open in prior window
+let g:netrw_altv=1                              " Split to right
+let g:netrw_liststyle=3                         " Display as tree
 
 " air-line
 let g:airline_powerline_fonts = 1
@@ -100,10 +107,14 @@ let g:ale_linters = {
             \}
 let g:airline#extensions#ale#enabled = 1
 
+" Miscellaneous
+let g:tex_flavor = "latex"                      " OK default autoindentation option for C-like languages
+
 " **************************************
 " KEYMAPS
 " **************************************
 noremap <F3> :Autoformat<CR>
+noremap <F4> :NERDTree<CR>
 
 " For switching between many opened files by using ctrl+l or ctrl+h
 map <C-J> :next <CR>
@@ -129,10 +140,8 @@ if !exists("autocmds_loaded")
     let autocmds_loaded=1
 
     augroup vimrc_autocmds
-        " Overlength line highlighting and wrapping for src files
-        au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp,cs,js,hs} highlight overLength ctermbg=red guifg=white guibg=#592929
-        au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp,cs,js,hs} match overLength /\%>80v.\+/
-        au BufRead,BufNewFile *.{s,c,h,java,cpp,hpp,cs,js,hs} set textwidth=80
-
+        " Overlength line highlighting for source files
+        autocmd FileType c,cpp,cs,cmake,haskell,java,python,javascript highlight overLength ctermbg=red guifg=white guibg=#592929
+        autocmd FileType c,cpp,cs,cmake,haskell,java,python,javascript match overLength /\%>80v.\+/
     augroup END
 endif
