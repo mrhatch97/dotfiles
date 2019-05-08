@@ -17,10 +17,12 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-fugitive'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'godlygeek/tabular'
 Plugin 'w0rp/ale'
@@ -33,6 +35,7 @@ filetype plugin indent on    " required
 " VARIABLES
 " **************************************
 set nu                                          " line numbering on
+set encoding=utf8                               " default to UTF-8 encoding
 set noerrorbells                                " bye bye bells :)
 set modeline                                    " show what I'm doing
 set showmode                                    " show the mode on the dedicated line (see above)
@@ -41,17 +44,27 @@ set wildmenu                                    " Better command line completion
 set showcmd                                     " Show partial commands in last line of screen
 set ignorecase                                  " search without regards to case
 set smartcase                                   " except when using capital letters
+set hlsearch                                    " Highlight search results
+set splitbelow                                  " h-split to bottom
+set splitright                                  " v-split to right
 set backspace=indent,eol,start                  " backspace over everything
+"set whichwrap+=<,>,h,l                         " Allow line wrapping when navigating horizontally
 set fileformats=unix,dos,mac                    " open files from mac/dos
 set ruler                                       " which line am I on?
 set showmatch                                   " highlight matching parentheses
 set incsearch                                   " incremental searching
 set laststatus=2                                " Always display status line
 set confirm                                     " Confirm instead of fail
+set so=15                                       " Pad edge of window by 15 lines when scrolling
+set wrap                                        " Wrap lines over the terminal buffer width
+
+" Disable swap files and backups
+set nobackup
+set nowb
+set noswapfile
 
 " General indentation options
 " Spaces to indent, 4-wide indent
-
 set autoindent                                  " Try to match indentation, allow smartindent
 set expandtab                                   " Tab outputs spaces
 set shiftwidth=4                                " Spaces per indentation step for autoindent
@@ -65,13 +78,23 @@ set background=dark
 colorscheme solarized
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
+" Ignore compiled files when autocompleting
+set wildignore=*.o,*~,*.pyc
+if has("win16") || has("win32")
+	set wildignore+=.git\*,.hg\*,.svn\*
+else
+	set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+endif
+
 " Built-in file browser
 let g:netrw_banner=0                            " Disable banner
 let g:netrw_browse_split=4                      " Open in prior window
 let g:netrw_altv=1                              " Split to right
 let g:netrw_liststyle=3                         " Display as tree
 
-" air-line
+" airline
+let g:airline_theme='badwolf'
+let g:airline_solarized_bg='dark'
 let g:airline_powerline_fonts = 1
 
 if !exists('g:airline_symbols')
@@ -108,7 +131,7 @@ let g:ale_linters = {
 let g:airline#extensions#ale#enabled = 1
 
 " Miscellaneous
-let g:tex_flavor = "latex"                      " OK default autoindentation option for C-like languages
+let g:tex_flavor = "latex"                      " Default to LaTeX if can't determine type of .tex file
 
 " **************************************
 " KEYMAPS
@@ -116,9 +139,11 @@ let g:tex_flavor = "latex"                      " OK default autoindentation opt
 noremap <F3> :Autoformat<CR>
 noremap <F4> :NERDTree<CR>
 
-" For switching between many opened files by using ctrl+l or ctrl+h
-map <C-J> :next <CR>
-map <C-K> :prev <CR>
+" Move between splits
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 " Disable Arrow keys in Escape mode
 map <up> <nop>
@@ -138,6 +163,13 @@ inoremap jj <ESC>
 " Avoid duplication of autocmds
 if !exists("autocmds_loaded")
     let autocmds_loaded=1
+
+    " Move cursorline with active window
+    augroup CursorLine
+        au!
+        au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+        au WinLeave * setlocal nocursorline
+    augroup END
 
     augroup vimrc_autocmds
         " Overlength line highlighting for source files
