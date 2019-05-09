@@ -15,7 +15,6 @@ CYAN='\e[1;36m'
 NC='\e[0m'              # No Color
 
 #Truncate working dir to last 20 characters
-
 if [ -z "$COLUMNS" ] 
 then
     COLUMNS=80
@@ -55,6 +54,15 @@ alias duh='du -d 1'
 #-------------------------------------------------------------------------------
 # Environment Variables
 #-------------------------------------------------------------------------------
+export GPG_TTY=$(tty)
+
+# Start the gpg-agent if not already running
+if ! pgrep -x -u "${USER}" gpg-agent >/dev/null 2>&1; then
+  gpg-connect-agent /bye >/dev/null 2>&1
+fi
+
+# Refresh gpg-agent tty in case user switches into an X session
+gpg-connect-agent updatestartuptty /bye >/dev/null
 
 # Avoid clobbering the existing prompt command
 if [ -n "$PROMPT_COMMAND" ]; then 
@@ -80,6 +88,11 @@ fi
 # Bash secondary prompt
 PS2='>'
 
+if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+    GIT_PROMPT_ONLY_IN_REPO=1
+    source $HOME/.bash-git-prompt/gitprompt.sh
+fi
+
 #-------------------------------------------------------------------------------
 # MOTD etc.
 #-------------------------------------------------------------------------------
@@ -88,25 +101,14 @@ echo -e "Bash version ${RED}${BASH_VERSION%.*}${NC} on tty ${RED}$DISPLAY${NC} a
 
 echo -e "Imperial thought for the day:\n$(fortune warhammer)"
 
-export GPG_TTY=$(tty)
-
-# Start the gpg-agent if not already running
-if ! pgrep -x -u "${USER}" gpg-agent >/dev/null 2>&1; then
-  gpg-connect-agent /bye >/dev/null 2>&1
-fi
-
-# Refresh gpg-agent tty in case user switches into an X session
-gpg-connect-agent updatestartuptty /bye >/dev/null
-
+#-------------------------------------------------------------------------------
+# Personal aliases
+#-------------------------------------------------------------------------------
 alias install='sudo pacman -S'
 alias uninstall='sudo pacman -Rs'
 
+# traverse up the working directory 'to' a given directory
 function to() {
     cwd=`pwd`
     cd ${cwd%$1*}$1 
 }
-
-if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
-    GIT_PROMPT_ONLY_IN_REPO=1
-    source $HOME/.bash-git-prompt/gitprompt.sh
-fi
