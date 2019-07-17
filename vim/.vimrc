@@ -74,12 +74,18 @@ set smartindent                                 " OK default autoindentation opt
 
 " Syntax highlighting theme
 syntax enable
+
+" Set these to 0 if your terminal emulator has issues with font styles
+let g:solarized_bold=1
+let g:solarized_underline=1
+let g:solarized_italic=1
+
 set background=dark
 colorscheme solarized
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
 " Ignore compiled files when autocompleting
-set wildignore=*.o,*~,*.pyc
+set wildignore=*.o,*.exe,*.obj,*.class,*.jar,*~,*.pyc
 if has("win16") || has("win32")
 	set wildignore+=.git\*,.hg\*,.svn\*
 else
@@ -156,6 +162,9 @@ imap <up> <nop>
 imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
+
+" Move rest of line up a line
+map L DO<c-r>"<ESC>
 
 " Easy exit from insert mode
 inoremap jj <ESC>

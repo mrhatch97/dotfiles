@@ -7,7 +7,14 @@
 
 [[ $DISPLAY ]] && shopt -s checkwinsize
 
-PS1='[\u@\h \W]\$ '
+# Bash main prompt for root and non-root respectively
+if [[ ${EUID} == 0 ]] ; then
+    # [time host: wd] h$ >
+    PS1='\[\e[31m\][\t \H: \W]\[\e[0m\] \[\e[34m\]\!\$\[\e[0m\] > '
+else
+    # [user@host: wd] h$ >
+    PS1='[\[\e[32m\]\u@\h:\[\e[0m\] \[\e[33m\]\W\[\e[0m\]] \[\e[35m\]\!\$\[\e[0m\] > '
+fi
 
 case ${TERM} in
   xterm*|rxvt*|Eterm|aterm|kterm|gnome*)

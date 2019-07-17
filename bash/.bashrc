@@ -80,9 +80,12 @@ if [[ ${EUID} == 0 ]] ; then
     #Optional multiline prompt
     #PS1='\[\e[31m\]\n\h: [\w] \t\n\!\$ > \[\e[0m\]'
 else
-    PS1='[\u@\h: $TRIMMED_PWD] \!\$ > '
-    #Optional multiline prompt
-    #PS1='\n\u@\h: [\w]\n\!\$ > '
+    # [user@host: wd] h$ >
+    PS1='[\[\e[32m\]\u@\h:\[\e[0m\] \[\e[33m\]$TRIMMED_PWD\[\e[0m\]] \[\e[35m\]\!\$\[\e[0m\] > '
+    # Optional multiline prompt
+    # user@host: [wd]
+    # h$ >
+    #PS1='\[\e[32m\]\u@\h\[\e[0m\]: [\[\e[33m\]\w\[\e[0m\]]\n\[\e[35m\]\!\$\[\e[0m\] > '
 fi
 
 # Bash secondary prompt
@@ -97,8 +100,6 @@ fi
 # MOTD etc.
 #-------------------------------------------------------------------------------
 
-echo -e "Bash version ${RED}${BASH_VERSION%.*}${NC} on tty ${RED}$DISPLAY${NC} at $(date +%Y-%m-%d:%H:%M:%S)"
-
 echo -e "Imperial thought for the day:\n$(fortune warhammer)"
 
 #-------------------------------------------------------------------------------
@@ -112,3 +113,6 @@ function to() {
     cwd=`pwd`
     cd ${cwd%$1*}$1 
 }
+
+# Disable CTRL-s scroll lock
+stty -ixon
