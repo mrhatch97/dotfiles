@@ -31,6 +31,8 @@ Plugin 'Yggdroot/indentLine'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+packadd termdebug
+
 " **************************************
 " VARIABLES
 " **************************************
@@ -83,6 +85,8 @@ let g:solarized_italic=1
 set background=dark
 colorscheme solarized
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+hi Terminal ctermbg=black guibg=black 
 
 " Ignore compiled files when autocompleting
 set wildignore=*.o,*.exe,*.obj,*.class,*.jar,*~,*.pyc
@@ -155,6 +159,7 @@ noremap <F2> :so $MYVIMRC<CR> " Reload the vimrc
 noremap <F3> :Autoformat<CR>
 noremap <F4> :NERDTree<CR>
 map <F5> :call Grep_internal(expand("<cword>"))<CR>
+map <F6> :!ctags --totals=yes --recurse=yes . <CR>
 
 " Move between splits
 map <C-j> <C-W>j
