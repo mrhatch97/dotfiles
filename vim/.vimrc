@@ -1,6 +1,6 @@
 " ~/.vimrc
 " Matthew Hatch
-" Last edited 2019-05-06
+" Last edited 2019-08-18
 
 set nocompatible        " get rid of strict vi compatibility!
 filetype off
@@ -138,12 +138,23 @@ let g:airline#extensions#ale#enabled = 1
 
 " Miscellaneous
 let g:tex_flavor = "latex"                      " Default to LaTeX if can't determine type of .tex file
+let g:tex_conceal = ""                          " Stop hiding LaTeX markup
+
+" Grep for the given word, skip the prompt, open quickfix window
+function Grep_internal(term)
+    silent execute " grep -srnw --binary-files=without-match --exclude-dir=.git
+                \ --exclude-from=exclude.list . -e " . a:term . " "
+    redraw!
+    cwindow
+endfunction
 
 " **************************************
 " KEYMAPS
 " **************************************
+noremap <F2> :so $MYVIMRC<CR> " Reload the vimrc
 noremap <F3> :Autoformat<CR>
 noremap <F4> :NERDTree<CR>
+map <F5> :call Grep_internal(expand("<cword>"))<CR>
 
 " Move between splits
 map <C-j> <C-W>j
@@ -168,6 +179,8 @@ map L DO<c-r>"<ESC>
 
 " Easy exit from insert mode
 inoremap jj <ESC>
+
+command! -nargs=1 Grep :call Grep_internal(<f-args>)
 
 " Avoid duplication of autocmds
 if !exists("autocmds_loaded")
