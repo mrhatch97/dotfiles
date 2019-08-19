@@ -68,11 +68,15 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
-bindsym $mod+o split h
+# split in "horizontal" orientation
+# i3 calls this horizontal but everyone else (terminator, vim)
+# calls it vertical, so flip these from what i3 thinks
+bindsym $mod+o split v
 
-# split in vertical orientation
-bindsym $mod+e split v
+# split in "vertical" orientation
+# i3 calls this vertical but everyone else (terminator, vim)
+# calls it horizontal, so flip these from what i3 thinks
+bindsym $mod+e split h
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle

@@ -111,7 +111,19 @@ alias uninstall='sudo pacman -Rs'
 # traverse up the working directory 'to' a given directory
 function to() {
     cwd=`pwd`
-    cd ${cwd%$1*}$1 
+
+    if [ "`basename "$cwd"`" == "$1" ]; then
+        cwd="`dirname "$cwd"`"
+    fi
+
+    newwd="${cwd%$1*}"
+
+    if [ "$newwd" == "$cwd" ]; then
+        echo "No such directory"; 
+        return 1
+    else
+        cd "$newwd"/"$1"
+    fi
 }
 
 # Disable CTRL-s scroll lock
