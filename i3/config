@@ -103,13 +103,13 @@ bindsym $mod+t focus mode_toggle
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3: comm"
-set $ws4 "4: spotify"
-set $ws5 "5: kee"
+set $ws4 "4"
+set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+set $ws9 "9: spotify"
+set $ws10 "10: kee"
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -186,17 +186,16 @@ bindsym $mod+a move workspace to output left
 bindsym $mod+d move workspace to output right
 
 # Assign workspaces to monitors
-workspace $ws1 output primary
-workspace $ws2 output DVI-D-0
+workspace $ws1 output DVI-D-0
+workspace $ws2 output primary
 workspace $ws3 output HDMI-0
-workspace $ws4 output primary
-workspace $ws5 output primary
+workspace $ws10 output primary
+workspace $ws9 output HDMI-0
 
 # Assign programs to their workspaces
-assign [class="Firefox"] workspace $ws2
 assign [class="discord"] workspace $ws3
-assign [class="KeePass"] workspace $ws5
-for_window [class="Spotify"] move to workspace $ws4
+assign [class="KeePass"] workspace $ws10
+for_window [class="Spotify"] move to workspace $ws9
 
 # Set wallpapers
 exec --no-startup-id feh --randomize --bg-fill /usr/share/wallpapers/Custom/*
