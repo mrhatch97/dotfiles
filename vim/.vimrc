@@ -1,6 +1,6 @@
 " ~/.vimrc
 " Matthew Hatch
-" Last edited 2020-04-19
+" Last edited 2020-04-22
 
 set nocompatible        " get rid of strict vi compatibility!
 filetype off
@@ -181,7 +181,7 @@ noremap <F3> :Autoformat<CR>
 " Move between splits
 map <C-j> <C-W>j
 map <C-k> <C-W>k
-map <C-h> <C-W>j
+map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Disable Arrow keys in Escape mode
@@ -190,12 +190,6 @@ map <down> <nop>
 map <left> <nop>
 map <right> <nop>
 
-" Disable Arrow keys in Insert mode
-imap <up> <nop>
-imap <down> <nop>
-imap <left> <nop>
-imap <right> <nop>
-
 " Move rest of line up a line
 map L DO<c-r>"<ESC>
 
@@ -203,38 +197,41 @@ map L DO<c-r>"<ESC>
 inoremap jj <ESC>
 
 " Save with leader
-map <Leader>w :w<CR>
+nmap <Leader>w :w<CR>
 " "make" current project
-map <Leader>m :!build<CR>
+nmap <Leader>m :!build<CR>
 " Regenerate ctags file
-map <Leader>t :!ctags --recurse=yes --totals=yes . <CR>
+nmap <Leader>t :!ctags --recurse=yes --totals=yes . <CR>
 " Reload the vimrc after a change
-map <Leader>r :so $MYVIMRC<CR>
+nmap <Leader>r :so $MYVIMRC<CR>
 " Toggle file explorer
-map <Leader>f :NerdTreeToggle<CR>
+nmap <Leader>f :NerdTreeToggle<CR>
 " List the active buffers and prep to load one
-map <Leader>b :ls<CR>:b<Space>
+nmap <Leader>b :ls<CR>:b<Space>
 " Remove trailing whitespace in current file
-map <Leader>$ :%s/\s\+$//e<CR>
+nmap <Leader>$ :%s/\s\+$//e<CR>
 " Open/close the location list
 map <Leader>l :lopen<CR>
 map <Leader>L :lclose<CR>
+" Navigate between warnings/errors in ALE
+map <Leader>j <Plug>(ale_next_wrap)<CR>
+map <Leader>k <Plug>(ale_previous_wrap)<CR>
 
 " Session commands
 "
 " Save the current session
-map <Leader>ss :exec "mksession! " . v:this_session<CR>
+nmap <Leader>ss :exec "mksession! " . v:this_session<CR>
 " Prep to load a session
-map <Leader>sl :so ~/.vim/sessions/
+nmap <Leader>sl :so ~/.vim/sessions/
 " Write all open buffers, then save the current session
-map <Leader>sq :exec "mksession! " . v:this_session<CR>:xa<CR>
+nmap <Leader>sq :exec "mksession! " . v:this_session<CR>:xa<CR>
 
 " Grep commands
 "
 " Grep for word under cursor in project
-map <Leader>gp :call Grep_internal(expand("<cword>"))<CR>
+nmap <Leader>gp :call Grep_internal(expand("<cword>"))<CR>
 " Grep for word under cursor in file; open results in loclist
-map <Leader>gf :lvimgrep <cword> %<CR>:lopen<CR>
+nmap <Leader>gf :lvimgrep <cword> %<CR>:lopen<CR>
 
 command! -nargs=1 Grep :call Grep_internal(<f-args>)
 
