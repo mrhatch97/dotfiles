@@ -52,20 +52,20 @@ disk "/" {
 
 cpu_temperature 0 {
         format = "CPU: %degrees °C"
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input"
 }
 
 cpu_temperature 1 {
         format = "%degrees °C"
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp2_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp2_input"
 }
 cpu_temperature 2 {
         format = "%degrees °C"
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp3_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp3_input"
 }
 cpu_temperature 3 {
         format = "%degrees °C"
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp4_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp4_input"
         separator_block_width = 20
 }
 

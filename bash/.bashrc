@@ -14,13 +14,6 @@ cyan='\e[0;36m'
 CYAN='\e[1;36m'
 NC='\e[0m'              # No Color
 
-#Truncate working dir to last 20 characters
-if [ -z "$COLUMNS" ] 
-then
-    COLUMNS=80
-fi
-NEW_PROMPT_COMMAND='TRIMMED_PWD=${PWD: -($COLUMNS / 4)}; TRIMMED_PWD=${TRIMMED_PWD:-$PWD}'
-
 #-------------------------------------------------------------------------------
 # Personal Aliases
 #-------------------------------------------------------------------------------
@@ -64,11 +57,18 @@ fi
 # Refresh gpg-agent tty in case user switches into an X session
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
+#Truncate working dir to last 20 characters
+if [ -z "$COLUMNS" ] 
+then
+    COLUMNS=80
+fi
+NEW_PROMPT_COMMAND='TRIMMED_PWD=${PWD: -($COLUMNS / 4)}; TRIMMED_PWD=${TRIMMED_PWD:-$PWD}'
+
 # Avoid clobbering the existing prompt command
 if [ -n "$PROMPT_COMMAND" ]; then 
     PROMPT_COMMAND="$PROMPT_COMMAND;$NEW_PROMPT_COMMAND"
 else
-    PROMPT_COMMAND="$NEW_PROMPT_COMAND"
+    PROMPT_COMMAND=$NEW_PROMPT_COMMAND
 fi
 
 # Done with this

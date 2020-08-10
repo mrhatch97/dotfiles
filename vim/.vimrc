@@ -32,7 +32,8 @@ packadd termdebug
 " **************************************
 " VARIABLES
 " **************************************
-set nu                                          " line numbering on
+set number                                      " line numbering on
+set relativenumber                              " Show relative line numbers
 set encoding=utf8                               " default to UTF-8 encoding
 set noerrorbells                                " bye bye bells :)
 set modeline                                    " show what I'm doing
@@ -60,7 +61,7 @@ set nobackup
 set nowb
 set noswapfile
 
-" General indentation options
+" General indentation/formatting options
 " Spaces to indent, 4-wide indent
 set autoindent                                  " Try to match indentation, allow smartindent
 set expandtab                                   " Tab outputs spaces
@@ -68,10 +69,11 @@ set shiftwidth=4                                " Spaces per indentation step fo
 set tabstop=4                                   " Number of spaces \t occupies
 set smarttab                                    " Insert tabs according to shiftwidth or (soft)tabstop based on context
 set smartindent                                 " OK default autoindentation option for C-like languages
+set textwidth=0                                 " Don't limit line length in unrecognized filetypes
 
 " Miscellaneous options
 
-set colorcolumn=80                              " Mark the 80th column to indicate overlength lines in code files
+set colorcolumn=+1                              " Mark column to indicate overlength lines in code files
 
 set ssop-=options                               " don't store options in the session - we have this vimrc for that
 
@@ -145,12 +147,21 @@ let g:airline_symbols.linenr = ''
 " Linter config
 let g:ale_linters = {
             \   'ada': ['gcc'],
-            \   'c': ['clangtidy'],
-            \   'cpp': ['clangtidy'],
+            \   'c': ['clangd', 'clangtidy'],
+            \   'cpp': ['clangd', 'clangtidy'],
             \   'haskell': ['stack-build']
             \}
-" Enable airline integration
+" Enable airline integration with ALE (warning/error count)
 let g:airline#extensions#ale#enabled = 1
+
+" For airline whitespace checking:
+"
+" Allow mixed-indent files as long as they adhere to a 'tabs for indentation,
+" spaces for alignment' style
+let g:airline#extensions#whitespace#mixed_indent_algo = 2
+" Set which whitespace checks to run
+let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing', 'long',
+            \ 'mixed-indent-file', 'conflicts' ]
 
 " Haskell linter configuration
 " Stop passing --fast; this forces the whole project to recompile when running
@@ -199,13 +210,13 @@ inoremap jj <ESC>
 " Save with leader
 nmap <Leader>w :w<CR>
 " "make" current project
-nmap <Leader>m :!build<CR>
+nmap <Leader>m :!build DEBUG<CR>
 " Regenerate ctags file
 nmap <Leader>t :!ctags --recurse=yes --totals=yes . <CR>
 " Reload the vimrc after a change
 nmap <Leader>r :so $MYVIMRC<CR>
 " Toggle file explorer
-nmap <Leader>f :NerdTreeToggle<CR>
+nmap <Leader>f :NERDTreeToggle<CR>
 " List the active buffers and prep to load one
 nmap <Leader>b :ls<CR>:b<Space>
 " Remove trailing whitespace in current file

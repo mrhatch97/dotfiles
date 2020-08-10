@@ -35,13 +35,7 @@ bindsym $mod+Return exec i3-sensible-terminal
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-#bindsym $mod+d exec dmenu_run
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-set $menu --no-startup-id qdbus org.kde.krunner /App display
+set $menu rofi -combi-modi window#drun#ssh -theme solarized -font "hack 10" -show combi
 bindsym $mod+space exec $menu
 
 # change focus
@@ -82,8 +76,8 @@ bindsym $mod+e split h
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+bindsym $mod+u layout stacking
+bindsym $mod+i layout tabbed
 bindsym $mod+p layout toggle split
 
 # toggle tiling / floating
@@ -98,6 +92,8 @@ bindsym $mod+t focus mode_toggle
 # focus the child container
 #bindsym $mod+d focus child
 
+bindsym $mod+z scratchpad show
+
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1"
@@ -108,7 +104,7 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9: spotify"
+set $ws9 "9"
 set $ws10 "10: kee"
 
 # switch to workspace
@@ -139,8 +135,6 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -169,6 +163,23 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+set $i3exit /home/mhatch/.config/i3/i3exit
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $i3exit lock, mode "default"
+    bindsym e exec --no-startup-id $i3exit logout, mode "default"
+    bindsym s exec --no-startup-id $i3exit suspend, mode "default"
+    bindsym h exec --no-startup-id $i3exit hibernate, mode "default"
+    bindsym r exec --no-startup-id $i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id $i3exit shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Shift+e mode "$mode_system"
+
 # Focus settings
 focus_follows_mouse no
 
@@ -190,33 +201,19 @@ workspace $ws1 output DVI-D-0
 workspace $ws2 output primary
 workspace $ws3 output HDMI-0
 workspace $ws10 output primary
-workspace $ws9 output HDMI-0
 
 # Assign programs to their workspaces
+assign [class="firefox"] workspace $ws1
 assign [class="discord"] workspace $ws3
 assign [class="KeePass"] workspace $ws10
-for_window [class="Spotify"] move to workspace $ws9
+for_window [class="Spotify"] move scratchpad
 
-# Set wallpapers
-exec --no-startup-id feh --randomize --bg-fill /usr/share/wallpapers/Custom/*
+# puush commands
+bindsym Ctrl+Shift+4 exec --no-startup-id puush -c -a
+bindsym Ctrl+Shift+3 exec --no-startup-id puush -c -f
+bindsym Ctrl+Shift+2 exec --no-startup-id puush -c -w
 
-## Plasma Integration
-# Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everythiing)
-exec --no-startup-id wmctrl -c Plasma
-for_window [title="Desktop — Plasma"] kill, floating enable, border none
-
-## Avoid tiling popups, dropdown windows from plasma
-# for the first time, manually resize them, i3 will remember the setting for floating windows
-for_window [class="plasmashell"] floating enable
-for_window [class="Plasma"] floating enable, border none
-for_window [title="plasma-desktop"] floating enable, border none
-for_window [title="win7"] floating enable, border none
-for_window [class="krunner"] floating enable, border none
-for_window [class="Kmix"] floating enable, border none
-for_window [class="Klipper"] floating enable, border none
-for_window [class="Plasmoidviewer"] floating enable, border none
-
-exec_always compton -f
+exec --no-startup-id discord
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -225,3 +222,20 @@ bar {
         tray_output primary
         position top
 }
+
+###############################################################################
+# Begin i3-gaps-specific configuration
+###############################################################################
+
+for_window [class=".*"] border pixel 0
+
+workspace $ws1 gaps inner 10
+
+workspace $ws3 gaps horizontal 160
+workspace $ws3 gaps vertical 90
+
+smart_gaps inverse_outer
+
+smart_borders on
+
+hide_edge_borders smart_no_gaps
