@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Color definitions:
+red='\[\e[31m\]'
+green='\[\e[32m\]'
+yellow='\[\e[33m\]'
+purple='\[\e[35m\]'
+NC='\[\e[0m\]'     # No Color
+
+if [[ $1 -eq 0 ]]; then
+    STATUS_COLOR=${purple}
+else
+    STATUS_COLOR=${red}
+fi
+
+#Truncate working dir to last 20 characters
+if [ -n "${TERM}" ];
+then
+    COLS=$(tput cols)
+else
+    COLS=80
+fi
+
+CWD=${PWD}
+let MAX_WIDTH=${COLS}/4
+# Truncate to max length
+(( ${#CWD} > ${MAX_WIDTH} )) && CWD="...${CWD: -($MAX_WIDTH-3)}"
+
+# Bash main prompt for root and non-root respectively
+if [[ ${EUID} == 0 ]] ; then
+    echo "${red}[\t \H: ${CWD}] \!\$ > ${NC}"
+    # Optional multiline prompt
+    # echo "${red}\n\h: [\w] \t\n\!\$ > ${NC}"
+else
+    # [user@host: wd] h$ >
+    echo "[${green}\u@\h:${NC} ${yellow}${CWD}${NC}] ${STATUS_COLOR}\!\$${NC} > "
+    # Optional multiline prompt
+    # user@host: [wd]
+    # h$ >
+    # echo "${green}\u@\h${NC}: [${yellow}\w${NC}]\n${STATUS_COLOR}\!\$${NC} > "
+fi
